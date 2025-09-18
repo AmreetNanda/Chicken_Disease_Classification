@@ -1,6 +1,7 @@
 tensorflow
 pandas 
 dvc
+ipykernal
 notebook
 numpy
 matplotlib
