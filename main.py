@@ -2,7 +2,6 @@ from chicken_classifier.pipeline.stage_01_data_ingestion import DataIngestionTra
 from chicken_classifier.pipeline.stage_02_prepare_base_model import PrepareBaseModelTrainingPipeline
 from chicken_classifier import logger
 
-
 if __name__ == "__main__":
 
     # try:
