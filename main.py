@@ -1,10 +1,38 @@
 from chicken_classifier.pipeline.stage_01_data_ingestion import DataIngestionTrainingPipeline
+from chicken_classifier.pipeline.stage_02_prepare_base_model import PrepareBaseModelTrainingPipeline
+from chicken_classifier import logger
+
 
 if __name__ == "__main__":
+
+    # try:
+    #     print(">>> Stage 01: Data Ingestion started <<<")
+    #     pipeline = DataIngestionTrainingPipeline()
+    #     pipeline.main()
+    #     print(">>> Stage 01: Data Ingestion completed <<<")
+    # except Exception as e:
+    #     raise e
+
+    STAGE_NAME = "Data Ingestion stage"
     try:
-        print(">>> Stage 01: Data Ingestion started <<<")
-        pipeline = DataIngestionTrainingPipeline()
-        pipeline.main()
-        print(">>> Stage 01: Data Ingestion completed <<<")
+         logger.info(f"**********************************************************")
+         logger.info(f">>>>>> stage {STAGE_NAME} started <<<<<<") 
+         data_ingestion = DataIngestionTrainingPipeline()
+         data_ingestion.main()
+         logger.info(f">>>>>> stage {STAGE_NAME} completed <<<<<<\n\nx==========x")
+         logger.info(f"**********************************************************")
     except Exception as e:
+        logger.exception(e)
+        raise e
+
+    STAGE_NAME = "Prepare base model"
+    try: 
+        logger.info(f"**********************************************************")
+        logger.info(f">>>>>> stage {STAGE_NAME} started <<<<<<")
+        prepare_base_model = PrepareBaseModelTrainingPipeline()
+        prepare_base_model.main()
+        logger.info(f">>>>>> stage {STAGE_NAME} completed <<<<<<\n\nx==========x")
+        logger.info(f"**********************************************************")
+    except Exception as e:
+        logger.exception(e)
         raise e
