@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chicken Disease Classification</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+    <style>
+        body { background-color: #eff2f9; }
+        h3 { color: #1b2d6b; font-size: 32px; font-weight: 700; }
+        .disease-section { margin: 30px 0; }
+        .disease-section img { max-width: 100%; border-radius: 10px; margin-bottom: 10px; }
+        .img-part { height: 300px; width: 300px; margin: 0px auto; }
+        .image-part { height: 300px; width: 300px; border: 1px solid #1b2d6b; }
+        .image-part img { position: absolute; height: 300px; width:300px; display:none; padding:5px; }
+        .image-part #video { display:block; height: 300px; width:300px; padding:5px; }
+        .res-part { border:1px solid #dedede; margin-left:20px; height: 310px; width:100%; padding:5px; margin:0px auto; overflow:auto; }
+        .btn-part { width:325px; }
+        #loading {
+            position: fixed; left: 0; top: 0; width: 100%; height: 100%;
+            z-index: 9999; overflow: hidden; background: rgba(255,255,255,0.7); display: none;
+        }
+        .loader {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #363e75;
+            border-radius: 50%;
+            width: 60px; height: 60px;
+            position: absolute; top: 50%; left: 50%;
+            margin-top: -30px; margin-left: -30px;
+            animation: spin 2s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg);} 100% { transform: rotate(360deg);} }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h3 class="text-center py-4">Chicken Disease Classification</h3>
+
+    <!-- Disease Info -->
+    <section class="disease-section row">
+        <div class="col-md-4 text-center">
+            <img src="https://cdn.pixabay.com/photo/2016/11/29/02/06/chick-1866476_960_720.jpg" alt="Coccidiosis">
+            <h5>Coccidiosis</h5>
+            <p>A parasitic disease of the intestinal tract of chickens caused by protozoa. Symptoms include diarrhea, weight loss, and weakness.</p>
+        </div>
+        <div class="col-md-4 text-center">
+            <img src="https://cdn.pixabay.com/photo/2017/01/20/00/30/hen-1999927_960_720.jpg" alt="New Castle Disease">
+            <h5>New Castle Disease</h5>
+            <p>A contagious viral disease affecting chickens, leading to respiratory distress, nervous signs, and reduced egg production.</p>
+        </div>
+        <div class="col-md-4 text-center">
+            <img src="https://cdn.pixabay.com/photo/2017/09/25/13/12/chicken-2786841_960_720.jpg" alt="Salmonella">
+            <h5>Salmonella</h5>
+            <p>A bacterial infection that can spread from chickens to humans. Symptoms in chickens include diarrhea and reduced growth.</p>
+        </div>
+    </section>
+
+    <!-- Upload & Predict -->
+    <section class="iupload">
+        <div class="row">
+            <div class="img-part col-md-6">
+                <div class="image-part">
+                    <video autoplay id="video" poster="https://img.freepik.com/free-vector/farm-animal-chicken_1308-67476.jpg" ></video>
+                    <img src="" id="photo">
+                </div>
+                <div class="btn-part">
+                    <form id="upload-data" class="pt-3">
+                        <div class="input-group mt-3 row">
+                            <button type="button" class="btn btn-primary col-md-5 ml-3 mr-4" id="uload">Upload</button>
+                            <button id="send" type="button" class="btn btn-success col-md-5">Predict</button>
+                        </div>
+                        <input type="hidden" id="url" value="/predict"/>
+                        <input name="upload" type="file" id="fileinput" style="position:absolute;top:-500px;"/>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-6 right-part">
+                <h5 class="mb-2 text-center">Prediction Results</h5>
+                <div class="res-part"><div class="jsonRes"></div></div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Loader -->
+<div id="loading"><div class="loader"></div></div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+let base_data = "";
+
+function sendRequest(base64Data){
+    if(base64Data){
+        $("#loading").show();
+        $.ajax({
+            url : $("#url").val(),
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({ image: base64Data }),
+            success: function(res){
+                $("#loading").hide();
+                $(".res-part").html("<pre>" + JSON.stringify(res, null, 2) + "</pre>");
+            },
+            error: function(xhr){
+                $("#loading").hide();
+                $(".res-part").html("<p class='text-danger'>Error: " + xhr.responseText + "</p>");
+            }
+        });
+    }
+}
+
+$(document).ready(function(){
+    $('#send').click(function(){ sendRequest(base_data); });
+    $('#uload').click(function(){ $('#fileinput').trigger('click'); });
+
+    $("#fileinput").change(function(){
+        if (this.files && this.files[0]){
+            var reader = new FileReader();
+            reader.onload = function (e){
+                var url = e.target.result;
+                var img = new Image();
+                img.onload = function(){
+                    var canvas = document.createElement('CANVAS');
+                    var ctx = canvas.getContext('2d');
+                    canvas.height = this.height;
+                    canvas.width = this.width;
+                    ctx.drawImage(this, 0, 0);
+                    base_data = canvas.toDataURL('image/jpeg', 1.0).replace(/^data:image.+;base64,/, '');
+                };
+                img.src = url;
+                $('#photo').attr('src', url).show();
+                $('#video').hide();
+            }
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+});
+</script>
+</body>
+</html>
