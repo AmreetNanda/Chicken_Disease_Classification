@@ -1,6 +1,7 @@
 from chicken_classifier.pipeline.stage_01_data_ingestion import DataIngestionTrainingPipeline
 from chicken_classifier.pipeline.stage_02_prepare_base_model import PrepareBaseModelTrainingPipeline
 from chicken_classifier.pipeline.stage_03_training import ModelTrainingPipeline
+from chicken_classifier.pipeline.stage_04_evaluation import EvaluationPipeline
 from chicken_classifier import logger
 
 if __name__ == "__main__":
@@ -38,14 +39,26 @@ if __name__ == "__main__":
     #     raise e
 
 
-    STAGE_NAME = "Training"
-    try: 
-        logger.info(f"**********************************************************")
+    # STAGE_NAME = "Training"
+    # try: 
+    #     logger.info(f"**********************************************************")
+    #     logger.info(f">>>>>> stage {STAGE_NAME} started <<<<<<")
+    #     model_trainer = ModelTrainingPipeline()
+    #     model_trainer.main()
+    #     logger.info(f">>>>>> stage {STAGE_NAME} completed <<<<<<\n\nx==========x")
+    #     logger.info(f"**********************************************************")
+    # except Exception as e:
+    #     logger.exception(e)
+    #     raise e
+    
+
+    STAGE_NAME = "Evaluation stage"
+    try:
+        logger.info(f"*******************")
         logger.info(f">>>>>> stage {STAGE_NAME} started <<<<<<")
-        model_trainer = ModelTrainingPipeline()
-        model_trainer.main()
+        model_evalution = EvaluationPipeline()
+        model_evalution.main()
         logger.info(f">>>>>> stage {STAGE_NAME} completed <<<<<<\n\nx==========x")
-        logger.info(f"**********************************************************")
     except Exception as e:
         logger.exception(e)
         raise e
