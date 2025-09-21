@@ -1,4 +1,4 @@
-#!C:\Users\Amreet\Desktop\Chicken Disease Classification\venv2\python.exe
+#!C:\Users\Amreet\Desktop\Chicken_Disease_Classification\venv2\python.exe
 __author__ = 'jszheng'
 import optparse
 import sys
