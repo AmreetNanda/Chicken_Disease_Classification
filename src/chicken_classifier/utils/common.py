@@ -9,6 +9,8 @@ from box import ConfigBox
 from pathlib import Path
 from typing import Any
 import base64
+from typing import Union
+
 
 @ensure_annotations
 def read_yaml(path_to_yaml: Path) -> ConfigBox:
@@ -33,8 +35,30 @@ def read_yaml(path_to_yaml: Path) -> ConfigBox:
         raise ValueError("yaml file is empty")
     except Exception as e:
         raise e
+
+    
+# @ensure_annotations
+# def read_yaml(path_to_yaml: Union[str, Path]) -> ConfigBox:
+#     try:
+#         path_to_yaml = Path(path_to_yaml)  # convert str -> Path if needed
+#         with open(path_to_yaml) as yaml_file:
+#             content = yaml.safe_load(yaml_file)
+#             logger.info(f"yaml file: {path_to_yaml} loaded successfully")
+#             return ConfigBox(content)
+#     except BoxValueError:
+#         raise ValueError("yaml file is empty")
+#     except Exception as e:
+#         raise e
     
 
+# @ensure_annotations
+# def read_yaml(path_to_yaml: Union[str, Path]) -> ConfigBox:
+#     path_to_yaml = Path(path_to_yaml)  # convert string to Path if needed
+#     with open(path_to_yaml) as f:
+#         content = yaml.safe_load(f)
+#         logger.info(f"yaml file: {path_to_yaml} loaded successfully")
+#         return ConfigBox(content)
+    
 
 @ensure_annotations
 def create_directories(path_to_directories: list, verbose=True):

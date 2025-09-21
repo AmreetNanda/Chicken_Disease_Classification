@@ -44,3 +44,38 @@ class DataIngestion:
             zip_ref.extractall(unzip_path)
 
         logger.info(f"Extracted {self.config.local_data_file} → {unzip_path}")
+
+        self._reorganize_dataset(unzip_path)
+
+    def _reorganize_dataset(self, unzip_path: Path):
+        """
+        Merge original + PCR folders into 4 classes and place under Chicken-fecal-images
+        """
+        target_root = unzip_path / "Chicken-fecal-images"
+        os.makedirs(target_root, exist_ok=True)
+
+        mapping = {
+            "cocci": ["cocci", "pcrcocci"],
+            "healthy": ["healthy", "pcrhealthy"],
+            "ncd": ["ncd", "pcrncd"],
+            "salmo": ["salmo", "pcrsalmo"],
+        }
+
+        for target_class, source_folders in mapping.items():
+            target_dir = target_root / target_class
+            os.makedirs(target_dir, exist_ok=True)
+
+            for folder in source_folders:
+                src_dir = unzip_path / folder
+                if src_dir.exists():
+                    for file in os.listdir(src_dir):
+                        src_file = src_dir / file
+                        dst_file = target_dir / file
+                        shutil.move(str(src_file), str(dst_file))
+                    logger.info(f"Moved files from {src_dir} → {target_dir}")
+
+        # (Optional) cleanup old extracted folders
+        for folder in unzip_path.iterdir():
+            if folder.is_dir() and folder.name != "Chicken-fecal-images":
+                shutil.rmtree(folder)
+                logger.info(f"Removed old folder {folder}")
