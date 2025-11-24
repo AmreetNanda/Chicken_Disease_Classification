@@ -127,7 +127,7 @@ Open: 👉 http://localhost:8501
 ![App Screenshot](https://github.com/AmreetNanda/Chicken_Disease_Classification/blob/main/Chicken_disease_classification.png)
 
 ## Demo video
-
+https://github.com/user-attachments/assets/9b330be7-af3d-4e80-8cc9-4ef2021e9823
 
 ## License
 
