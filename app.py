@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, render_template
 import os
 from flask_cors import CORS, cross_origin
+# from src.chicken_classifier.utils.common import decodeImage
 from chicken_classifier.utils.common import decodeImage
 from chicken_classifier.pipeline.predict import PredictionPipeline
 

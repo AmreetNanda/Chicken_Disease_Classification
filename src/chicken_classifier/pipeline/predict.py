@@ -36,3 +36,4 @@ class PredictionPipeline:
         else:
             prediction = 'Coccidiosis'
             return [{ "image" : prediction}]
+        
